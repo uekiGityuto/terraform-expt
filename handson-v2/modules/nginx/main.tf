@@ -37,7 +37,7 @@ resource "aws_lb_target_group" "this" {
 }
 
 data "template_file" "container_definitions" {
-  template = file("./container_definitions.json")
+  template = file("${path.module}/container_definitions.json")
 }
 
 resource "aws_ecs_task_definition" "this" {
