@@ -19,26 +19,30 @@ variable "private_subnet_cidrs" {
   default = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
 }
 
+locals {
+  public_subnets  = { for index, cidr in var.public_subnet_cidrs : index => { az = var.azs[index], cidr = cidr } }
+  private_subnets = { for index, cidr in var.private_subnet_cidrs : index => { az = var.azs[index], cidr = cidr } }
+}
+
 # VPC
 resource "aws_vpc" "this" {
   cidr_block = var.vpc_cidr
 
   tags = {
-    Name = "${var.name}"
+    Name = var.name
   }
 }
 
 # Public Subnet
 resource "aws_subnet" "publics" {
-  count = length(var.public_subnet_cidrs)
+  for_each = local.public_subnets
 
-  vpc_id = aws_vpc.this.id
-
-  availability_zone = var.azs[count.index]
-  cidr_block        = var.public_subnet_cidrs[count.index]
+  vpc_id            = aws_vpc.this.id
+  availability_zone = each.value.az
+  cidr_block        = each.value.cidr
 
   tags = {
-    Name = "${var.name}-public-${count.index}"
+    Name = "${var.name}-public-${each.key}"
   }
 }
 
@@ -46,28 +50,28 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${var.name}"
+    Name = var.name
   }
 }
 
 resource "aws_eip" "nat" {
-  count = length(var.public_subnet_cidrs)
+  for_each = local.public_subnets
 
   domain = "vpc"
 
   tags = {
-    Name = "${var.name}-natgw-${count.index}"
+    Name = "${var.name}-natgw-${each.key}"
   }
 }
 
 resource "aws_nat_gateway" "this" {
-  count = length(var.public_subnet_cidrs)
+  for_each = local.public_subnets
 
-  subnet_id     = element(aws_subnet.publics.*.id, count.index)
-  allocation_id = element(aws_eip.nat.*.id, count.index)
+  subnet_id     = aws_subnet.publics[each.key].id
+  allocation_id = aws_eip.nat[each.key].id
 
   tags = {
-    Name = "${var.name}-${count.index}"
+    Name = "${var.name}-${each.key}"
   }
 }
 
@@ -86,50 +90,49 @@ resource "aws_route" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  count = length(var.public_subnet_cidrs)
+  for_each = local.public_subnets
 
-  subnet_id      = element(aws_subnet.publics.*.id, count.index)
+  subnet_id      = aws_subnet.publics[each.key].id
   route_table_id = aws_route_table.public.id
 }
 
 # Private Subnet
 resource "aws_subnet" "privates" {
-  count = length(var.private_subnet_cidrs)
+  for_each = local.private_subnets
 
-  vpc_id = aws_vpc.this.id
-
-  availability_zone = var.azs[count.index]
-  cidr_block        = var.private_subnet_cidrs[count.index]
+  vpc_id            = aws_vpc.this.id
+  availability_zone = each.value.az
+  cidr_block        = each.value.cidr
 
   tags = {
-    Name = "${var.name}-private-${count.index}"
+    Name = "${var.name}-private-${each.key}"
   }
 }
 
 resource "aws_route_table" "privates" {
-  count = length(var.private_subnet_cidrs)
+  for_each = local.private_subnets
 
   vpc_id = aws_vpc.this.id
 
   tags = {
-    Name = "${var.name}-private-${count.index}"
+    Name = "${var.name}-private-${each.key}"
   }
 }
 
 resource "aws_route" "privates" {
-  count = length(var.private_subnet_cidrs)
+  for_each = local.private_subnets
 
   destination_cidr_block = "0.0.0.0/0"
 
-  route_table_id = element(aws_route_table.privates.*.id, count.index)
-  nat_gateway_id = element(aws_nat_gateway.this.*.id, count.index)
+  route_table_id = aws_route_table.privates[each.key].id
+  nat_gateway_id = aws_nat_gateway.this[each.key].id
 }
 
 resource "aws_route_table_association" "privates" {
-  count = length(var.private_subnet_cidrs)
+  for_each = local.private_subnets
 
-  subnet_id      = element(aws_subnet.privates.*.id, count.index)
-  route_table_id = element(aws_route_table.privates.*.id, count.index)
+  subnet_id      = aws_subnet.privates[each.key].id
+  route_table_id = aws_route_table.privates[each.key].id
 }
 
 output "vpc_id" {
@@ -137,9 +140,9 @@ output "vpc_id" {
 }
 
 output "public_subnet_ids" {
-  value = aws_subnet.publics.*.id
+  value = [for s in aws_subnet.publics : s.id]
 }
 
 output "private_subnet_ids" {
-  value = aws_subnet.privates.*.id
+  value = [for s in aws_subnet.privates : s.id]
 }
