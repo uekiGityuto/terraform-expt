@@ -22,32 +22,25 @@ variable "azs" {
 }
 
 variable "domain" {
-  type = string
-
+  type    = string
   default = "waito-expt.com"
 }
 
 module "network" {
   source = "./network"
-
-  name = var.name
-
-  azs = var.azs
+  name   = var.name
+  azs    = var.azs
 }
 
 module "acm" {
   source = "./acm"
-
-  name = var.name
-
+  name   = var.name
   domain = var.domain
 }
 
 module "elb" {
-  source = "./elb"
-
-  name = var.name
-
+  source            = "./elb"
+  name              = var.name
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
   domain            = var.domain
@@ -56,15 +49,12 @@ module "elb" {
 
 module "ecs_cluster" {
   source = "./ecs_cluster"
-
-  name = var.name
+  name   = var.name
 }
 
 module "nginx" {
-  source = "./nginx"
-
-  name = var.name
-
+  source             = "./nginx"
+  name               = var.name
   cluster_name       = module.ecs_cluster.cluster_name
   vpc_id             = module.network.vpc_id
   subnet_ids         = module.network.private_subnet_ids
