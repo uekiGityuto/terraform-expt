@@ -12,7 +12,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"4ops.terraform"
+				"4ops.terraform",
+				"GitHub.copilot",
+				"GitHub.copilot-labs",
+				"GitHub.copilot-chat"
 			]
 		}
 	}
