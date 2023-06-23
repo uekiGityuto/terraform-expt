@@ -1,23 +1,3 @@
-variable "name" {
-  type = string
-}
-
-variable "vpc_id" {
-  type = string
-}
-
-variable "https_listener_arn" {
-  type = string
-}
-
-variable "cluster_name" {
-  type = string
-}
-
-variable "subnet_ids" {
-  type = list(any)
-}
-
 locals {
   name = "${var.name}-nginx"
 }

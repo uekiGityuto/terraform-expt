@@ -1,23 +1,3 @@
-variable "name" {
-  type = string
-}
-
-variable "vpc_id" {
-  type = string
-}
-
-variable "public_subnet_ids" {
-  type = list(any)
-}
-
-variable "domain" {
-  type = string
-}
-
-variable "acm_id" {
-  type = string
-}
-
 resource "aws_security_group" "this" {
   name        = "${var.name}-alb"
   description = "${var.name} alb"
@@ -120,8 +100,4 @@ resource "aws_route53_record" "this" {
     zone_id                = aws_lb.this.zone_id
     evaluate_target_health = true
   }
-}
-
-output "https_listener_arn" {
-  value = aws_lb_listener.https.arn
 }

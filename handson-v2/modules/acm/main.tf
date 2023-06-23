@@ -1,11 +1,3 @@
-variable "name" {
-  type = string
-}
-
-variable "domain" {
-  type = string
-}
-
 data "aws_route53_zone" "this" {
   name         = var.domain
   private_zone = false
@@ -45,8 +37,4 @@ resource "aws_acm_certificate_validation" "this" {
   certificate_arn = aws_acm_certificate.this.arn
 
   validation_record_fqdns = [for record in aws_route53_record.this : record.fqdn]
-}
-
-output "acm_id" {
-  value = aws_acm_certificate.this.id
 }

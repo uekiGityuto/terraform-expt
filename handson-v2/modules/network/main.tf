@@ -1,24 +1,3 @@
-variable "name" {
-  type = string
-}
-
-variable "azs" {
-  type    = list(any)
-  default = ["ap-northeast-1a", "ap-northeast-1c", "ap-northeast-1d"]
-}
-
-variable "vpc_cidr" {
-  default = "10.0.0.0/16"
-}
-
-variable "public_subnet_cidrs" {
-  default = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
-}
-
-variable "private_subnet_cidrs" {
-  default = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
-}
-
 locals {
   public_subnets  = { for index, cidr in var.public_subnet_cidrs : index => { az = var.azs[index], cidr = cidr } }
   private_subnets = { for index, cidr in var.private_subnet_cidrs : index => { az = var.azs[index], cidr = cidr } }
@@ -133,16 +112,4 @@ resource "aws_route_table_association" "privates" {
 
   subnet_id      = aws_subnet.privates[each.key].id
   route_table_id = aws_route_table.privates[each.key].id
-}
-
-output "vpc_id" {
-  value = aws_vpc.this.id
-}
-
-output "public_subnet_ids" {
-  value = [for s in aws_subnet.publics : s.id]
-}
-
-output "private_subnet_ids" {
-  value = [for s in aws_subnet.privates : s.id]
 }
