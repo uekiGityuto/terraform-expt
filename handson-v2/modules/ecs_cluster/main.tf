@@ -1,3 +1,3 @@
-resource "aws_ecs_cluster" "this" {
-  name = var.name
+resource "aws_ecs_cluster" "default" {
+  name = "${var.env}-${var.service}"
 }

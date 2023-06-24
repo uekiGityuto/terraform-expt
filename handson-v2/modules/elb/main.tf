@@ -1,6 +1,10 @@
-resource "aws_security_group" "this" {
-  name        = "${var.name}-alb"
-  description = "${var.name} alb"
+locals {
+  name = "${var.env}-${var.service}"
+}
+
+resource "aws_security_group" "default" {
+  name        = "${local.name}-alb"
+  description = "${var.env} ${var.service} alb"
 
   vpc_id = var.vpc_id
 
@@ -10,53 +14,41 @@ resource "aws_security_group" "this" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name = "${var.name}-alb"
-  }
 }
 
 resource "aws_security_group_rule" "http" {
-  security_group_id = aws_security_group.this.id
-
-  type = "ingress"
-
-  from_port = 80
-  to_port   = 80
-  protocol  = "tcp"
-
-  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.default.id
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "https" {
-  security_group_id = aws_security_group.this.id
-
-  type = "ingress"
-
-  from_port = 443
-  to_port   = 443
-  protocol  = "tcp"
-
-  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.default.id
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_lb" "this" {
+resource "aws_lb" "default" {
   load_balancer_type = "application"
-  name               = var.name
-
-  security_groups = ["${aws_security_group.this.id}"]
+  name               = local.name
+  # TODO: "${}"いらない気がする
+  security_groups = ["${aws_security_group.default.id}"]
   subnets         = var.public_subnet_ids
 }
 
 resource "aws_lb_listener" "http" {
-  port     = "80"
-  protocol = "HTTP"
-
-  load_balancer_arn = aws_lb.this.arn
+  port              = "80"
+  protocol          = "HTTP"
+  load_balancer_arn = aws_lb.default.arn
 
   default_action {
     type = "redirect"
-
     redirect {
       port        = "443"
       protocol    = "HTTPS"
@@ -66,16 +58,13 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_listener" "https" {
-  port     = "443"
-  protocol = "HTTPS"
-
-  certificate_arn = var.acm_id
-
-  load_balancer_arn = aws_lb.this.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = var.acm_id
+  load_balancer_arn = aws_lb.default.arn
 
   default_action {
     type = "fixed-response"
-
     fixed_response {
       content_type = "text/plain"
       status_code  = "200"
@@ -84,20 +73,19 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-data "aws_route53_zone" "this" {
+data "aws_route53_zone" "default" {
   name         = var.domain
   private_zone = false
 }
 
-resource "aws_route53_record" "this" {
-  type = "A"
-
+resource "aws_route53_record" "default" {
+  type    = "A"
   name    = var.domain
-  zone_id = data.aws_route53_zone.this.id
+  zone_id = data.aws_route53_zone.default.id
 
   alias {
-    name                   = aws_lb.this.dns_name
-    zone_id                = aws_lb.this.zone_id
+    name                   = aws_lb.default.dns_name
+    zone_id                = aws_lb.default.zone_id
     evaluate_target_health = true
   }
 }

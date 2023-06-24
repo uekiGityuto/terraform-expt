@@ -18,9 +18,9 @@ provider "aws" {
   region = "ap-northeast-1"
   default_tags {
     tags = {
-      Terraform = true
-      service   = "expt"
       env       = "stg"
+      service   = "terraform-expt"
+      Terraform = true
     }
   }
 }
