@@ -13,19 +13,19 @@ variable "domain" {
 }
 
 module "network" {
-  source = "./modules/network"
+  source = "../../modules/network"
   name   = var.name
   azs    = var.azs
 }
 
 module "acm" {
-  source = "./modules/acm"
+  source = "../../modules/acm"
   name   = var.name
   domain = var.domain
 }
 
 module "elb" {
-  source            = "./modules/elb"
+  source            = "../../modules/elb"
   name              = var.name
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
@@ -34,12 +34,12 @@ module "elb" {
 }
 
 module "ecs_cluster" {
-  source = "./modules/ecs_cluster"
+  source = "../../modules/ecs_cluster"
   name   = var.name
 }
 
 module "nginx" {
-  source             = "./modules/nginx"
+  source             = "../../modules/nginx"
   name               = var.name
   cluster_name       = module.ecs_cluster.cluster_name
   vpc_id             = module.network.vpc_id
