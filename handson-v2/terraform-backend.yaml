@@ -3,7 +3,7 @@ Description: S3 & DynamoDB for Terraform Backend
 
 Parameters:
   Environment:
-    Description: The environment name (e.g. prod, stg)
+    Description: The environment name (e.g. stg, prod)
     Type: String
     AllowedPattern: "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
     ConstraintDescription: Must begin and end with alphanumerics, and can contain alphanumerics and hyphens.
