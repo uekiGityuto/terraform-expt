@@ -12,11 +12,15 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"4ops.terraform",
+				"hashicorp.terraform",
 				"GitHub.copilot",
 				"GitHub.copilot-labs",
 				"GitHub.copilot-chat"
-			]
+			],
+			"settings": {
+				"editor.formatOnSave": true,
+				"files.insertFinalNewline": true
+			}
 		}
 	}
 
