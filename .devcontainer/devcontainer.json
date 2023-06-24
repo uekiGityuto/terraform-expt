@@ -21,7 +21,7 @@
 				"GitHub.copilot-chat",
 				"GitHub.vscode-github-actions",
 				"donjayamanne.githistory",
-				"Gruntfuggly.todo-tree",
+				"Gruntfuggly.todo-tree"
 			],
 			"settings": {
 				"editor.formatOnSave": true,
