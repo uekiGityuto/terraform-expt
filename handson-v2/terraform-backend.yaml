@@ -2,15 +2,11 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: S3 & DynamoDB for Terraform Backend
 
 Parameters:
-  Name:
-    Description: |
-      Name of the S3 bucket, DynamoDB table;
-      Defaults to "terraform-state-AWS_ACCOUNT_ID"
-    Default: ""
+  Environment:
+    Description: The environment name (e.g. prod, stg)
     Type: String
-
-Conditions:
-  GenerateNames: !Equals [!Ref Name, ""]
+    AllowedPattern: "^[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+    ConstraintDescription: Must begin and end with alphanumerics, and can contain alphanumerics and hyphens.
 
 Resources:
 #------------------------------------------------------------------------------#
@@ -21,10 +17,7 @@ Resources:
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      BucketName: !If
-      - GenerateNames
-      - !Sub "terraform-state-${AWS::AccountId}"
-      - !Ref Name
+      BucketName: !Sub "${Environment}-terraform-state-${AWS::AccountId}"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -47,7 +40,7 @@ Resources:
   LockTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Ref StateBucket
+      TableName: !Sub "${Environment}-terraform-state-locktable"
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1

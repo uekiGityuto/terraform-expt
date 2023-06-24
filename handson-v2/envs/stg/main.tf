@@ -6,11 +6,11 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "terraform-state-428485887053"
+    bucket         = "stg-terraform-state-428485887053"
     key            = "terraform.tfstate"
     region         = "ap-northeast-1"
     encrypt        = true
-    dynamodb_table = "terraform-state-428485887053"
+    dynamodb_table = "stg-terraform-state-locktable"
   }
 }
 
@@ -20,6 +20,7 @@ provider "aws" {
     tags = {
       Terraform = true
       service   = "handson"
+      env       = "stg"
     }
   }
 }

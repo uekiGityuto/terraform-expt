@@ -19,7 +19,8 @@
 			],
 			"settings": {
 				"editor.formatOnSave": true,
-				"files.insertFinalNewline": true
+				"files.insertFinalNewline": true,
+				"editor.defaultFormatter": "hashicorp.terraform"
 			}
 		}
 	}
