@@ -5,9 +5,10 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
-		"ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {},
+		"ghcr.io/devcontainers/features/terraform:1": {},
 		"ghcr.io/dhoeric/features/terraform-docs:1": {},
-		"ghcr.io/dhoeric/features/terraformer:1": {}
+		"ghcr.io/dhoeric/features/terraformer:1": {},
+		"ghcr.io/devcontainers/features/aws-cli:1": {}
 	},
 	"customizations": {
 		"vscode": {
@@ -15,7 +16,10 @@
 				"hashicorp.terraform",
 				"GitHub.copilot",
 				"GitHub.copilot-labs",
-				"GitHub.copilot-chat"
+				"GitHub.copilot-chat",
+				"GitHub.vscode-github-actions",
+				"donjayamanne.githistory",
+				"Gruntfuggly.todo-tree"
 			],
 			"settings": {
 				"editor.formatOnSave": true,
