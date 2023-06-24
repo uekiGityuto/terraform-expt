@@ -19,7 +19,7 @@ provider "aws" {
   default_tags {
     tags = {
       Terraform = true
-      service   = "handson"
+      service   = "expt"
       env       = "stg"
     }
   }
