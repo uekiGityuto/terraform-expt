@@ -9,6 +9,10 @@ resource "aws_ecr_repository" "default" {
   image_tag_mutability = "MUTABLE"
 }
 
+resource "aws_ecs_cluster" "default" {
+  name = "${var.env}-${var.service}-backend"
+}
+
 data "aws_iam_policy_document" "assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -29,6 +33,10 @@ resource "aws_iam_role_policy_attachment" "task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_cloudwatch_log_group" "default" {
+  name              = local.log_gruop
+  retention_in_days = 90
+}
 
 resource "aws_ecs_task_definition" "default" {
   family                   = local.name
@@ -65,11 +73,6 @@ resource "aws_ecs_task_definition" "default" {
       ]
     }
   ])
-}
-
-resource "aws_cloudwatch_log_group" "cluster_log_group" {
-  name              = local.log_gruop
-  retention_in_days = 90
 }
 
 resource "aws_lb_target_group" "default" {
@@ -130,7 +133,7 @@ resource "aws_ecs_service" "default" {
   name            = local.name
   launch_type     = "FARGATE"
   desired_count   = 1
-  cluster         = var.cluster_name
+  cluster         = aws_ecs_cluster.default.name
   task_definition = aws_ecs_task_definition.default.arn
 
   network_configuration {

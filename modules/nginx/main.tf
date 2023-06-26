@@ -2,6 +2,10 @@ locals {
   name = "${var.env}-${var.service}"
 }
 
+resource "aws_ecs_cluster" "default" {
+  name = "${var.env}-${var.service}-backend"
+}
+
 resource "aws_lb_target_group" "default" {
   name        = local.name
   vpc_id      = var.vpc_id
@@ -73,7 +77,7 @@ resource "aws_ecs_service" "default" {
   name            = local.name
   launch_type     = "FARGATE"
   desired_count   = 1
-  cluster         = var.cluster_name
+  cluster         = aws_ecs_cluster.default.name
   task_definition = aws_ecs_task_definition.default.arn
 
   network_configuration {
