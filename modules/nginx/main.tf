@@ -3,7 +3,7 @@ locals {
 }
 
 resource "aws_ecs_cluster" "default" {
-  name = "${var.env}-${var.service}-backend"
+  name = "${var.env}-${var.service}"
 }
 
 resource "aws_lb_target_group" "default" {

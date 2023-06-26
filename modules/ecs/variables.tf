@@ -17,3 +17,15 @@ variable "https_listener_arn" {
 variable "subnet_ids" {
   type = list(any)
 }
+
+variable "cpu" {
+  type = string
+}
+
+variable "memory" {
+  type = string
+}
+
+variable "desired_count" {
+  type = number
+}

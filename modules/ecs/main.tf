@@ -1,16 +1,16 @@
 locals {
   name           = "${var.env}-${var.service}"
-  log_gruop      = "/${var.env}/${var.service}/backend"
+  log_gruop      = "/${var.env}/${var.service}"
   container_name = "fastapi"
 }
 
 resource "aws_ecr_repository" "default" {
-  name                 = "${var.env}-${var.service}-backend"
+  name                 = "${var.env}-${var.service}"
   image_tag_mutability = "MUTABLE"
 }
 
 resource "aws_ecs_cluster" "default" {
-  name = "${var.env}-${var.service}-backend"
+  name = "${var.env}-${var.service}"
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -40,8 +40,8 @@ resource "aws_cloudwatch_log_group" "default" {
 
 resource "aws_ecs_task_definition" "default" {
   family                   = local.name
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = var.cpu
+  memory                   = var.memory
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.task_execution_role.arn
@@ -61,6 +61,7 @@ resource "aws_ecs_task_definition" "default" {
           awslogs-stream-prefix : "ecs"
         }
       }
+      # TODO: 環境変数の渡し方は要検討（最低でも変数化する）
       environment = [
         {
           name : "WORKERS_PER_CORE",
@@ -132,7 +133,7 @@ resource "aws_ecs_service" "default" {
   depends_on      = [aws_lb_listener_rule.default]
   name            = local.name
   launch_type     = "FARGATE"
-  desired_count   = 1
+  desired_count   = var.desired_count
   cluster         = aws_ecs_cluster.default.name
   task_definition = aws_ecs_task_definition.default.arn
 

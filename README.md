@@ -11,7 +11,7 @@ ECSでWebアプリケーション（FastAPI）を稼働させるためのイン�
 CloudFormationで作成する。
 1. CloudFormationのコンソール画面でスタックの作成を開く
 1. テンプレートに`terraform-backend.yaml`を指定する
-1. スタックの名前を指定する（e.g. `stg-terraform-state-backend`）
+1. スタックの名前を指定する（e.g. `stg-terraform-state`）
 1. Environmentパラメータに環境名（e.g. `stg`, `prod`）を入力する
 1. タグにenvを入力する（e.g. `{env: stg}`）
 
