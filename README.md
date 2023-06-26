@@ -1,5 +1,8 @@
 # terraform-expt
 
+## 概要
+ECSでWebアプリケーション（FastAPI）を稼働させるためのインフラ
+
 ## 事前準備
 
 環境ごとに以下を実施する。
@@ -25,3 +28,6 @@ CloudFormationで作成する。
 
 ## 補足
 このリポジトリでは名前に環境名をつけているが、環境ごとにアカウントを分けている（マルチアカウント）場合は不要。
+
+## アプリケーション
+ECSで稼働させるアプリケーションは[fast-api-expt](https://github.com/uekiGityuto/fast-api-expt)
