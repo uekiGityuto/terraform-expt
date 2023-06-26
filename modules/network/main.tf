@@ -36,28 +36,6 @@ resource "aws_internet_gateway" "default" {
   }
 }
 
-resource "aws_eip" "nat" {
-  for_each = local.public_subnets
-
-  domain = "vpc"
-
-  tags = {
-    Name = "${local.name}-natgw-${each.key}"
-  }
-}
-
-# TODO: private linkの方が良いかも。そうすればEIPも不要なはず。
-resource "aws_nat_gateway" "default" {
-  for_each = local.public_subnets
-
-  subnet_id     = aws_subnet.publics[each.key].id
-  allocation_id = aws_eip.nat[each.key].id
-
-  tags = {
-    Name = "${local.name}-${each.key}"
-  }
-}
-
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.default.id
 
@@ -92,33 +70,29 @@ resource "aws_subnet" "privates" {
   }
 }
 
-resource "aws_route_table" "privates" {
-  for_each = local.private_subnets
-
+resource "aws_route_table" "private" {
   vpc_id = aws_vpc.default.id
 
   tags = {
-    Name = "${local.name}-private-${each.key}"
+    Name = "${local.name}-private"
   }
-}
-
-resource "aws_route" "privates" {
-  for_each = local.private_subnets
-
-  destination_cidr_block = "0.0.0.0/0"
-
-  route_table_id = aws_route_table.privates[each.key].id
-  nat_gateway_id = aws_nat_gateway.default[each.key].id
 }
 
 resource "aws_route_table_association" "privates" {
   for_each = local.private_subnets
 
   subnet_id      = aws_subnet.privates[each.key].id
-  route_table_id = aws_route_table.privates[each.key].id
+  route_table_id = aws_route_table.private.id
 }
 
 # VPC Endpoint
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = aws_vpc.default.id
+  service_name      = "com.amazonaws.ap-northeast-1.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.private.id]
+}
 
 resource "aws_security_group" "vpc_endpoint" {
   name   = "${local.name}-vpc-endpoint"
