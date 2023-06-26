@@ -1,5 +1,5 @@
 locals {
-  name = "${var.env}-${var.service}"
+  name            = "${var.env}-${var.service}"
   public_subnets  = { for index, cidr in var.public_subnet_cidrs : index => { az = var.azs[index], cidr = cidr } }
   private_subnets = { for index, cidr in var.private_subnet_cidrs : index => { az = var.azs[index], cidr = cidr } }
 }

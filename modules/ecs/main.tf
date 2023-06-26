@@ -104,7 +104,7 @@ resource "aws_lb_listener_rule" "default" {
 }
 
 resource "aws_security_group" "default" {
-  name        = local.name
+  name        = "${local.name}-ecs"
   description = local.name
   vpc_id      = var.vpc_id
 
