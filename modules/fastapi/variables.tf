@@ -6,10 +6,6 @@ variable "service" {
   type = string
 }
 
-variable "ecr_url" {
-  type = string
-}
-
 variable "vpc_id" {
   type = string
 }

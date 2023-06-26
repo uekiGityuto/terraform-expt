@@ -43,16 +43,9 @@ module "ecs_cluster" {
 #   https_listener_arn = module.elb.https_listener_arn
 # }
 
-module "ecr" {
-  source  = "../../modules/ecr"
-  env     = local.env
-  service = local.service
-}
-
 module "fastapi" {
   source             = "../../modules/fastapi"
   env                = local.env
-  ecr_url            = module.ecr.url
   service            = local.service
   cluster_name       = module.ecs_cluster.cluster_name
   vpc_id             = module.network.vpc_id

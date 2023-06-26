@@ -4,6 +4,11 @@ locals {
   container_name = "fastapi"
 }
 
+resource "aws_ecr_repository" "default" {
+  name                 = "${var.env}-${var.service}-backend"
+  image_tag_mutability = "MUTABLE"
+}
+
 data "aws_iam_policy_document" "assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -35,7 +40,7 @@ resource "aws_ecs_task_definition" "default" {
   container_definitions = jsonencode([
     {
       name  = local.container_name
-      image = var.ecr_url
+      image = aws_ecr_repository.default.repository_url
       portMappings = [{
         hostPort : 80,
         containerPort : 80
