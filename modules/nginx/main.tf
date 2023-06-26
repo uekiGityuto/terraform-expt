@@ -55,7 +55,7 @@ resource "aws_security_group" "default" {
   }
 
   tags = {
-    Name = "${local.name}"
+    Name = local.name
   }
 }
 
@@ -78,7 +78,7 @@ resource "aws_ecs_service" "default" {
 
   network_configuration {
     subnets         = var.subnet_ids
-    security_groups = ["${aws_security_group.default.id}"]
+    security_groups = [aws_security_group.default.id]
   }
 
   load_balancer {

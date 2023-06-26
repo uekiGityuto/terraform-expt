@@ -35,3 +35,7 @@ terraform.rc
 
 # macOS
 .DS_Store
+
+# memo
+memo.*
+

@@ -33,9 +33,26 @@ module "ecs_cluster" {
   service = local.service
 }
 
-module "nginx" {
-  source             = "../../modules/nginx"
+# module "nginx" {
+#   source             = "../../modules/nginx"
+#   env                = local.env
+#   service            = local.service
+#   cluster_name       = module.ecs_cluster.cluster_name
+#   vpc_id             = module.network.vpc_id
+#   subnet_ids         = module.network.private_subnet_ids
+#   https_listener_arn = module.elb.https_listener_arn
+# }
+
+module "ecr" {
+  source  = "../../modules/ecr"
+  env     = local.env
+  service = local.service
+}
+
+module "fastapi" {
+  source             = "../../modules/fastapi"
   env                = local.env
+  ecr_url            = module.ecr.url
   service            = local.service
   cluster_name       = module.ecs_cluster.cluster_name
   vpc_id             = module.network.vpc_id
