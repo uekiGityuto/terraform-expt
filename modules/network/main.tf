@@ -6,7 +6,9 @@ locals {
 
 # VPC
 resource "aws_vpc" "default" {
-  cidr_block = var.vpc_cidr
+  cidr_block           = var.vpc_cidr
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = {
     Name = local.name
@@ -140,15 +142,6 @@ resource "aws_security_group" "vpc_endpoint" {
 resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_id              = aws_vpc.default.id
   service_name        = "com.amazonaws.ap-northeast-1.ecr.dkr"
-  vpc_endpoint_type   = "Interface"
-  subnet_ids          = [for s in aws_subnet.privates : s.id]
-  security_group_ids  = [aws_security_group.vpc_endpoint.id]
-  private_dns_enabled = true
-}
-
-resource "aws_vpc_endpoint" "ecr_api" {
-  vpc_id              = aws_vpc.default.id
-  service_name        = "com.amazonaws.ap-northeast-1.ecr.api"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = [for s in aws_subnet.privates : s.id]
   security_group_ids  = [aws_security_group.vpc_endpoint.id]
