@@ -105,7 +105,7 @@ resource "aws_lb_listener_rule" "default" {
 
 resource "aws_security_group" "default" {
   name        = "${local.name}-ecs"
-  description = local.name
+  description = "${var.env} ${var.service} ecs security group"
   vpc_id      = var.vpc_id
 
   egress {
@@ -116,17 +116,17 @@ resource "aws_security_group" "default" {
   }
 
   tags = {
-    Name = local.name
+    Name = "${local.name}-ecs"
   }
 }
 
 resource "aws_security_group_rule" "default" {
-  security_group_id = aws_security_group.default.id
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id        = aws_security_group.default.id
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = var.elb_security_group_id
 }
 
 resource "aws_ecs_service" "default" {

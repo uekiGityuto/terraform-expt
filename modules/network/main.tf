@@ -95,22 +95,31 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_security_group" "vpc_endpoint" {
-  name   = "${local.name}-vpc-endpoint"
-  vpc_id = aws_vpc.default.id
+  name        = "${local.name}-vpc-endpoint"
+  description = "${var.env} ${var.service} VPC endpoint security group"
+  vpc_id      = aws_vpc.default.id
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [aws_vpc.default.cidr_block]
+  tags = {
+    Name = "${local.name}-vpc-endpoint"
   }
+}
 
-  egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [aws_vpc.default.cidr_block]
-  }
+resource "aws_security_group_rule" "ingress" {
+  security_group_id = aws_security_group.vpc_endpoint.id
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = [aws_vpc.default.cidr_block]
+}
+
+resource "aws_security_group_rule" "egress" {
+  security_group_id = aws_security_group.vpc_endpoint.id
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = [aws_vpc.default.cidr_block]
 }
 
 resource "aws_vpc_endpoint" "ecr_dkr" {

@@ -4,15 +4,18 @@ locals {
 
 resource "aws_security_group" "default" {
   name        = "${local.name}-alb"
-  description = "${var.env} ${var.service} alb"
-
-  vpc_id = var.vpc_id
+  description = "${var.env} ${var.service} alb security group"
+  vpc_id      = var.vpc_id
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${local.name}-alb"
   }
 }
 

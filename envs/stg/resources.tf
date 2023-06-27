@@ -39,13 +39,14 @@ module "elb" {
 # }
 
 module "ecs" {
-  source             = "../../modules/ecs"
-  env                = local.env
-  service            = local.service
-  vpc_id             = module.network.vpc_id
-  subnet_ids         = module.network.private_subnet_ids
-  https_listener_arn = module.elb.https_listener_arn
-  cpu                = "256"
-  memory             = "512"
-  desired_count      = 2
+  source                = "../../modules/ecs"
+  env                   = local.env
+  service               = local.service
+  vpc_id                = module.network.vpc_id
+  subnet_ids            = module.network.private_subnet_ids
+  https_listener_arn    = module.elb.https_listener_arn
+  elb_security_group_id = module.elb.security_group_id
+  cpu                   = "256"
+  memory                = "512"
+  desired_count         = 2
 }

@@ -14,6 +14,10 @@ variable "https_listener_arn" {
   type = string
 }
 
+variable "elb_security_group_id" {
+  type = string
+}
+
 variable "subnet_ids" {
   type = list(any)
 }
