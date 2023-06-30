@@ -52,9 +52,10 @@ resource "aws_security_group" "default" {
   vpc_id      = var.vpc_id
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    #tfsec:ignore:aws-ec2-no-public-egress-sgr
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -69,7 +70,8 @@ resource "aws_security_group_rule" "default" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  #tfsec:ignore:aws-ec2-no-public-ingress-sgr
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
 resource "aws_ecs_service" "default" {

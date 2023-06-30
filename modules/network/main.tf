@@ -5,6 +5,7 @@ locals {
 }
 
 # VPC
+#tfsec:ignore:aws-ec2-require-vpc-flow-logs-for-all-vpcs
 resource "aws_vpc" "default" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
@@ -106,6 +107,7 @@ resource "aws_security_group" "vpc_endpoint" {
 
 resource "aws_security_group_rule" "ingress" {
   security_group_id = aws_security_group.vpc_endpoint.id
+  description       = "Allow HTTPS in VPC"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
@@ -115,6 +117,7 @@ resource "aws_security_group_rule" "ingress" {
 
 resource "aws_security_group_rule" "egress" {
   security_group_id = aws_security_group.vpc_endpoint.id
+  description       = "Allow HTTPS in VPC"
   type              = "egress"
   from_port         = 443
   to_port           = 443

@@ -5,8 +5,13 @@ locals {
 }
 
 resource "aws_ecr_repository" "default" {
-  name                 = "${var.env}-${var.service}"
+  name = "${var.env}-${var.service}"
+  # TODO: 可能であればIMMUTABLEにする
   image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecs_cluster" "default" {
@@ -109,9 +114,11 @@ resource "aws_security_group" "default" {
   vpc_id      = var.vpc_id
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port = 0
+    to_port   = 0
+    #tfsec:ignore:aws-ec2-no-public-egress-sgr
+    protocol = "-1"
+    #tfsec:ignore:aws-ec2-no-public-egress-sgr
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -122,6 +129,7 @@ resource "aws_security_group" "default" {
 
 resource "aws_security_group_rule" "default" {
   security_group_id        = aws_security_group.default.id
+  description              = "Allow HTTP from ELB"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80

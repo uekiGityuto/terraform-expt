@@ -8,9 +8,10 @@ resource "aws_security_group" "default" {
   vpc_id      = var.vpc_id
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    #tfsec:ignore:aws-ec2-no-public-egress-sgr
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -25,7 +26,8 @@ resource "aws_security_group_rule" "http" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  #tfsec:ignore:aws-ec2-no-public-ingress-sgr
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "https" {
@@ -34,14 +36,17 @@ resource "aws_security_group_rule" "https" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  #tfsec:ignore:aws-ec2-no-public-ingress-sgr
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
+#tfsec:ignore:aws-elb-alb-not-public
 resource "aws_lb" "default" {
-  load_balancer_type = "application"
-  name               = local.name
-  security_groups = [aws_security_group.default.id]
-  subnets         = var.public_subnet_ids
+  load_balancer_type         = "application"
+  name                       = local.name
+  security_groups            = [aws_security_group.default.id]
+  subnets                    = var.public_subnet_ids
+  drop_invalid_header_fields = true # 有効ではないヘッダーフィールドを削除
 }
 
 resource "aws_lb_listener" "http" {

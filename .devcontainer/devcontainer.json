@@ -8,14 +8,13 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/devcontainers/features/aws-cli:1": {},
-		"ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
 		"ghcr.io/dhoeric/features/hadolint:1": {},
 		"ghcr.io/lukewiwa/features/shellcheck:0": {},
 		"ghcr.io/devcontainers/features/terraform:1": {
 			"version": "1.5.1"
 		},
 		"ghcr.io/dhoeric/features/terraform-docs:1": {},
-		// "ghcr.io/dhoeric/features/terraformer:1": {}
+		// "ghcr.io/dhoeric/features/terraformer:1": {},
 		"ghcr.io/dhoeric/features/tfsec:1": {}
 	},
 
@@ -37,7 +36,8 @@
 				"GitHub.copilot-chat",
 				"GitHub.vscode-github-actions",
 				"donjayamanne.githistory",
-				"Gruntfuggly.todo-tree"
+				"Gruntfuggly.todo-tree",
+				"tfsec.tfsec"
 			],
 			"settings": {
 				"hadolint.cliOptions": ["--no-color"],
