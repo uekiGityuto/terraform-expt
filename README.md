@@ -26,8 +26,5 @@ CloudFormationで作成する。
 なお、Route53でドメインを取得した場合はドメインをRoute53に登録する作業は自動で実施されると思われる。
 このリポジトリでは、お名前.comで登録したドメインを利用している。（[参考](https://dev.classmethod.jp/articles/route53-domain-onamae/)）
 
-## 補足
-このリポジトリでは名前に環境名をつけているが、環境ごとにアカウントを分けている（マルチアカウント）場合は不要。
-
 ## アプリケーション
 ECSで稼働させるアプリケーションは[fast-api-expt](https://github.com/uekiGityuto/fast-api-expt)
