@@ -4,6 +4,11 @@ locals {
 
 resource "aws_ecs_cluster" "default" {
   name = "${var.env}-${var.service}"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_lb_target_group" "default" {
@@ -51,21 +56,25 @@ resource "aws_security_group" "default" {
   description = local.name
   vpc_id      = var.vpc_id
 
-  egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    #tfsec:ignore:aws-ec2-no-public-egress-sgr
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = local.name
   }
 }
 
-resource "aws_security_group_rule" "default" {
+resource "aws_security_group_rule" "egress" {
   security_group_id = aws_security_group.default.id
+  description       = "Allow all to anywhere"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  #tfsec:ignore:aws-ec2-no-public-egress-sgr
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "ingress_http" {
+  security_group_id = aws_security_group.default.id
+  description       = "Allow HTTP from anywhere"
   type              = "ingress"
   from_port         = 80
   to_port           = 80

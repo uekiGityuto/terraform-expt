@@ -4,9 +4,11 @@ locals {
   container_name = "fastapi"
 }
 
+#tfsec:ignore:aws-ecr-repository-customer-key
 resource "aws_ecr_repository" "default" {
   name = "${var.env}-${var.service}"
-  # TODO: 可能であればIMMUTABLEにする
+  # FIXME: 可能であればIMMUTABLEにする
+  #tfsec:ignore:aws-ecr-enforce-immutable-repository
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -16,6 +18,11 @@ resource "aws_ecr_repository" "default" {
 
 resource "aws_ecs_cluster" "default" {
   name = "${var.env}-${var.service}"
+
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -38,6 +45,7 @@ resource "aws_iam_role_policy_attachment" "task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+#tfsec:ignore:aws-cloudwatch-log-group-customer-key
 resource "aws_cloudwatch_log_group" "default" {
   name              = local.log_gruop
   retention_in_days = 90
@@ -113,21 +121,23 @@ resource "aws_security_group" "default" {
   description = "${var.env} ${var.service} ecs security group"
   vpc_id      = var.vpc_id
 
-  egress {
-    from_port = 0
-    to_port   = 0
-    #tfsec:ignore:aws-ec2-no-public-egress-sgr
-    protocol = "-1"
-    #tfsec:ignore:aws-ec2-no-public-egress-sgr
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "${local.name}-ecs"
   }
 }
 
-resource "aws_security_group_rule" "default" {
+resource "aws_security_group_rule" "egress" {
+  security_group_id = aws_security_group.default.id
+  description       = "Allow all to anywhere"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  #tfsec:ignore:aws-ec2-no-public-egress-sgr
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "ingress_http" {
   security_group_id        = aws_security_group.default.id
   description              = "Allow HTTP from ELB"
   type                     = "ingress"

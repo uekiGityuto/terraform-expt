@@ -7,21 +7,25 @@ resource "aws_security_group" "default" {
   description = "${var.env} ${var.service} alb security group"
   vpc_id      = var.vpc_id
 
-  egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    #tfsec:ignore:aws-ec2-no-public-egress-sgr
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "${local.name}-alb"
   }
 }
 
-resource "aws_security_group_rule" "http" {
+resource "aws_security_group_rule" "egress" {
   security_group_id = aws_security_group.default.id
+  description       = "Allow all to anywhere"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  #tfsec:ignore:aws-ec2-no-public-egress-sgr
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "ingress_http" {
+  security_group_id = aws_security_group.default.id
+  description       = "Allow HTTP from anywhere"
   type              = "ingress"
   from_port         = 80
   to_port           = 80
@@ -30,8 +34,9 @@ resource "aws_security_group_rule" "http" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "https" {
+resource "aws_security_group_rule" "ingress_https" {
   security_group_id = aws_security_group.default.id
+  description       = "Allow HTTPS from anywhere"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
