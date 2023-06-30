@@ -29,7 +29,6 @@ jobs:
           echo "AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
           cat $AWS_WEB_IDENTITY_TOKEN_FILE
 
-          
       - name: Configure AWS
         run: |
           export AWS_ROLE_ARN=arn:aws:iam::428485887053:role/terraform-expt-terraform-from-github-actions
