@@ -35,17 +35,17 @@ jobs:
 
       - name: Debug AWS Credentials
         run: |
-          echo "AWS_ROLE_ARN: $AWS_ROLE_ARN"
-          echo "AWS_WEB_IDENTITY_TOKEN_FILE: $AWS_WEB_IDENTITY_TOKEN_FILE"
-          echo "AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
-          cat $AWS_WEB_IDENTITY_TOKEN_FILE
+          echo "AWS_ROLE_ARN: ${{ env.AWS_ROLE_ARN }}"
+          echo "AWS_WEB_IDENTITY_TOKEN_FILE: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}"
+          echo "AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}"
+          cat ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
 
       - name: Setup Terraform
         uses: aws-actions/configure-aws-credentials@v2.2.0
         with:
-          role-to-assume: "${{ AWS_ROLE_ARN }}"
-          web-identity-token-file: "${{ AWS_WEB_IDENTITY_TOKEN_FILE }}"
-          aws-region: "${{ AWS_DEFAULT_REGION }}"
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          web-identity-token-file: ${{ env.AWS_WEB_IDENTITY_TOKEN_FILE }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
           role-duration-seconds: 900
           role-session-name: GitHubActionsTerraformCICD
 
