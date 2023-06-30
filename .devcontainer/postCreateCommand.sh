@@ -2,5 +2,6 @@
 {
     echo "alias ll='ls -alF'"
     echo "alias tf='terraform'"
-    echo "alias tffmt='terraform fmt -recursive'"
+    echo "alias tffmts='terraform fmt -recursive'"
 } >> ~/.bashrc
+pre-commit install
