@@ -5,9 +5,6 @@ Parameters:
   RepoName:
     Type: String
     Default: uekiGityuto/terraform-expt
-  BranchName:
-    Type: String
-    Default: main
 
 Resources:
   Role:
@@ -21,9 +18,8 @@ Resources:
             Principal:
               Federated: !Ref GithubOidc
             Condition:
-              StringEquals:
-                "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-                "token.actions.githubusercontent.com:sub": !Sub "repo:${RepoName}:ref:refs/heads/${BranchName}"
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${RepoName}:*
 
   Policy:
     Type: AWS::IAM::Policy
