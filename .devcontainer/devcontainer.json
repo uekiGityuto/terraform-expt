@@ -37,7 +37,8 @@
 				"GitHub.vscode-github-actions",
 				"donjayamanne.githistory",
 				"Gruntfuggly.todo-tree",
-				"tfsec.tfsec"
+				"tfsec.tfsec",
+				"esbenp.prettier-vscode"
 			],
 			"settings": {
 				"hadolint.cliOptions": ["--no-color"],
