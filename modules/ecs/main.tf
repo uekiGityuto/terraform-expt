@@ -87,6 +87,10 @@ resource "aws_ecs_task_definition" "default" {
       ]
     }
   ])
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
 }
 
 resource "aws_lb_target_group" "default" {
