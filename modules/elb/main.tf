@@ -40,8 +40,7 @@ resource "aws_security_group_rule" "https" {
 resource "aws_lb" "default" {
   load_balancer_type = "application"
   name               = local.name
-  # TODO: "${}"いらない気がする
-  security_groups = ["${aws_security_group.default.id}"]
+  security_groups = [aws_security_group.default.id]
   subnets         = var.public_subnet_ids
 }
 
