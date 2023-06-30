@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "OIDC for GitHubActions with Broad Access, restricted to specific repository and branch"
+
+Parameters:
+  RepoName:
+    Type: String
+    Default: uekiGityuto/terraform-expt
+  BranchName:
+    Type: String
+    Default: main
+
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: terraform-expt-terraform-from-github-actions
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref GithubOidc
+            Condition:
+              StringEquals:
+                "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+                "token.actions.githubusercontent.com:sub": !Sub "repo:${RepoName}:ref:refs/heads/${BranchName}"
+
+  Policy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: OIDCforTerraformGitHubActionsBroadAccess
+      Roles:
+        - !Ref Role
+      PolicyDocument:
+        Version: "2012-10-17"
+        # 必要なリソースのみに制限すべき。検証用なので全般許可している
+        Statement:
+          - Effect: Allow
+            Action: '*'
+            Resource: '*'
+          - Effect: Deny
+            Action:
+              - 'aws-portal:*'
+              - 'account:*'
+            Resource: '*'
+
+  GithubOidc:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList: [sts.amazonaws.com]
+      ThumbprintList: [6938fd4d98bab03faadb97b34396831e3780aea1]
+
+Outputs:
+  Role:
+    Value: !GetAtt Role.Arn
