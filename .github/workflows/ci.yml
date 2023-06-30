@@ -49,10 +49,8 @@ jobs:
           # role-duration-seconds: 900
           # role-session-name: GitHubActionsTerraformCICD
 
-      - name: Change to Environment Directory and Terraform Init
+      - name: Change to Environment Directory and Terraform Plan
         run: |
           cd ${{ matrix.env_dir }}
+          terraform plan -no-color
           terraform init
-
-      - name: Terraform Plan
-        run: terraform plan -no-color
