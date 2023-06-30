@@ -52,5 +52,5 @@ jobs:
       - name: Change to Environment Directory and Terraform Plan
         run: |
           cd ${{ matrix.env_dir }}
-          terraform plan -no-color
           terraform init
+          terraform plan -no-color
