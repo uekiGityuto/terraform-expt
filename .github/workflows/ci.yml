@@ -18,15 +18,15 @@ jobs:
           - "envs/stg"
           # - "envs/prod"
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials - Staging
+        if: ${{ matrix.env_dir == 'envs/stg' }}
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::428485887053:role/terraform-expt-terraform-from-github-actions
+          role-to-assume: arn:aws:iam::428485887053:role/staging-role
           aws-region: ap-northeast-1
-          # role-duration-seconds: 900
-          # role-session-name: GitHubActionsTerraformCICD
 
       - name: Change to Environment Directory and Terraform Plan
         run: |
