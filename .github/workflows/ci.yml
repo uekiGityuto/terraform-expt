@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  terraformCICD:
+  ci:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -25,7 +25,7 @@ jobs:
         if: ${{ matrix.env_dir == 'envs/stg' }}
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::428485887053:role/staging-role
+          role-to-assume: arn:aws:iam::428485887053:role/terraform-expt-terraform-from-github-actions
           aws-region: ap-northeast-1
 
       - name: Change to Environment Directory and Terraform Plan
