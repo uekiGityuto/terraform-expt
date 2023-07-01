@@ -1,0 +1,35 @@
+name: "Terraform CD"
+
+on:
+  push:
+    tags:
+      - "stg-*"
+
+jobs:
+  stg:
+    if: ${{ github.ref }} == refs/tags/stg-*
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::428485887053:role/terraform-expt-terraform-from-github-actions
+          aws-region: ap-northeast-1
+
+      - name: Terraform Plan
+        run: |
+          cd envs/stg
+          terraform init
+          terraform plan -no-color
+
+      - name: Terraform Apply
+        run: |
+          cd envs/stg
+          terraform apply -auto-approve -no-color
+  
