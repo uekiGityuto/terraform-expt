@@ -29,15 +29,6 @@ module "elb" {
   acm_id            = module.acm.acm_id
 }
 
-# module "nginx" {
-#   source             = "../../modules/nginx"
-#   env                = local.env
-#   service            = local.service
-#   vpc_id             = module.network.vpc_id
-#   subnet_ids         = module.network.private_subnet_ids
-#   https_listener_arn = module.elb.https_listener_arn
-# }
-
 module "ecs" {
   source                = "../../modules/ecs"
   env                   = local.env
