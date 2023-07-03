@@ -3,11 +3,12 @@ name: "Terraform CD"
 on:
   push:
     tags:
-      - "stg-*"
+      - "v*"
 
 jobs:
   stg:
-    if: ${{ github.ref }} == refs/tags/stg-*
+    environment:
+      name: staging
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -32,4 +33,11 @@ jobs:
         run: |
           cd envs/stg
           terraform apply -auto-approve -no-color
-  
+
+  prod:
+    environment:
+      name: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder for Production Deployment
+        run: echo "Production deployment will be configured here in the future."

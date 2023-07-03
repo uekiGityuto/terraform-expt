@@ -1,6 +1,6 @@
 # terraform-expt
 
-# 概要
+## 概要
 
 ECS で Web アプリケーション（FastAPI）を稼働させるためのインフラ
 
@@ -37,7 +37,7 @@ CloudFormation で作成する。
 ### OIDC で AWS 認証するための準備
 
 GitHub Actions で OIDC を使用して AWS 認証するために、ID プロバイダや IAM ロールを作成する。
-なお、シングルアカウントの場合は、環境ごとでなく、一つ作成すれば良い。
+なお、シングルアカウントの場合は、環境ごとでなく一つ作成すれば良い。
 
 CloudFormation で作成する。
 
