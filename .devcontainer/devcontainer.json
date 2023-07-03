@@ -1,55 +1,56 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
-	"name": "Ubuntu",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
-	
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
-		"ghcr.io/devcontainers/features/aws-cli:1": {},
-		"ghcr.io/dhoeric/features/hadolint:1": {},
-		"ghcr.io/lukewiwa/features/shellcheck:0": {},
-		"ghcr.io/devcontainers/features/terraform:1": {
-			"version": "1.5.1"
-		},
-		"ghcr.io/dhoeric/features/terraform-docs:1": {},
-		// "ghcr.io/dhoeric/features/terraformer:1": {},
-		"ghcr.io/dhoeric/features/tfsec:1": {}
-	},
+  "name": "Ubuntu",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/dhoeric/features/hadolint:1": {},
+    "ghcr.io/lukewiwa/features/shellcheck:0": {},
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "1.5.1"
+    },
+    "ghcr.io/dhoeric/features/terraform-docs:1": {},
+    // "ghcr.io/dhoeric/features/terraformer:1": {},
+    "ghcr.io/dhoeric/features/tfsec:1": {},
+    "ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
+  },
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": ".devcontainer/postCreateCommand.sh",
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
 
-	// Configure tool-specific properties.
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"exiasr.hadolint",
-				"timonwong.shellcheck",
-				"hashicorp.terraform",
-				"GitHub.copilot-nightly",
-				"GitHub.copilot-labs",
-				"GitHub.copilot-chat",
-				"GitHub.vscode-github-actions",
-				"donjayamanne.githistory",
-				"Gruntfuggly.todo-tree",
-				"tfsec.tfsec",
-				"esbenp.prettier-vscode"
-			],
-			"settings": {
-				"hadolint.cliOptions": ["--no-color"],
-				"hadolint.hadolintPath": "/usr/local/bin/hadolint",
-				"editor.formatOnSave": true,
-				"files.insertFinalNewline": true,
-				"aws.telemetry": false
-			}
-		}
-	}
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": ".devcontainer/postCreateCommand.sh",
 
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "exiasr.hadolint",
+        "timonwong.shellcheck",
+        "hashicorp.terraform",
+        "GitHub.copilot-nightly",
+        "GitHub.copilot-labs",
+        "GitHub.copilot-chat",
+        "GitHub.vscode-github-actions",
+        "donjayamanne.githistory",
+        "Gruntfuggly.todo-tree",
+        "tfsec.tfsec",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "hadolint.cliOptions": ["--no-color"],
+        "hadolint.hadolintPath": "/usr/local/bin/hadolint",
+        "editor.formatOnSave": true,
+        "files.insertFinalNewline": true,
+        "aws.telemetry": false
+      }
+    }
+  }
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
 }

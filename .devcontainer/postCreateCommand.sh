@@ -4,3 +4,4 @@
     echo "alias tf='terraform'"
     echo "alias tffmts='terraform fmt -recursive'"
 } >> ~/.bashrc
+pre-commit install
