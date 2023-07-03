@@ -8,18 +8,31 @@ ECS で Web アプリケーション（FastAPI）を稼働させるためのイ�
 
 ECS で稼働させるアプリケーションは[fast-api-expt](https://github.com/uekiGityuto/fast-api-expt)
 
+## 開発
+
+### VSCode Dev Container
+
+[VSCode Dev Container](https://code.visualstudio.com/docs/remote/containers)を利用している。
+Dev Container を使うことを強制はしないが、使わない場合は、必要なライブラリを自分でインストールすること。
+
+### pre-commit フック
+
+[pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform#terraform_docs)を利用して、commit 時に 自動で lint をかけている。commit ができなかった場合は、pre-commit-terraform による lint エラーを疑うこと。
+
+Git のログには詳細なログは出力されないので、ターミナルから以下のコマンドを実行して、lint エラーの原因を確認すること。
+
+```sh
+pre-commit run -a
+```
+
+# 事前準備
+
 ## GitHub リポジトリの設定
 
 Environments に staging と production を作成する。
 production は Deployment protection rules で、Required reviewers にチェックをいれる。
 
-## pre-commit フック
-
-[pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform#terraform_docs)を利用して、commit 時に 自動で lint をかけている。commit ができなかった場合は、pre-commit-terraform による lint エラーを疑うこと。
-
-Git のログには詳細なログは出力されないので、ターミナルから`pre-commit run -a`を実行して、lint エラーの原因を確認すること。
-
-## 事前準備
+## AWS の準備
 
 環境ごとに以下を実施する。
 
