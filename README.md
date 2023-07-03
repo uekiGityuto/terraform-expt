@@ -13,6 +13,12 @@ ECS で稼働させるアプリケーションは[fast-api-expt](https://github.
 Environments に staging と production を作成する。
 production は Deployment protection rules で、Required reviewers にチェックをいれる。
 
+## pre-commit フック
+
+[pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform#terraform_docs)を利用して、commit 時に 自動で lint をかけている。commit ができなかった場合は、pre-commit-terraform による lint エラーを疑うこと。
+
+Git のログには詳細なログは出力されないので、ターミナルから`pre-commit run -a`を実行して、lint エラーの原因を確認すること。
+
 ## 事前準備
 
 環境ごとに以下を実施する。
