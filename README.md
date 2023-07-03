@@ -8,6 +8,11 @@ ECS で Web アプリケーション（FastAPI）を稼働させるためのイ�
 
 ECS で稼働させるアプリケーションは[fast-api-expt](https://github.com/uekiGityuto/fast-api-expt)
 
+## GitHub リポジトリの設定
+
+Environments に staging と production を作成する。
+production は Deployment protection rules で、Required reviewers にチェックをいれる。
+
 ## 事前準備
 
 環境ごとに以下を実施する。

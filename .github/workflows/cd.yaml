@@ -34,6 +34,7 @@ jobs:
           cd envs/stg
           terraform apply -auto-approve -no-color
 
+  # マニュアルレビュー必須にして、stg動作確認後にprodにデプロイする
   prod:
     environment:
       name: production
