@@ -60,8 +60,7 @@ resource "aws_ecs_task_definition" "default" {
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name = local.container_name
-      # TODO: tagを指定しなくて良いのかは要検討。
+      name  = local.container_name
       image = aws_ecr_repository.default.repository_url
       portMappings = [{
         hostPort : 80,
@@ -89,10 +88,15 @@ resource "aws_ecs_task_definition" "default" {
     }
   ])
   # 以下のplatformに合わせてDocker Imageを作成する
-  runtime_platform {
-    operating_system_family = "LINUX"
-    cpu_architecture        = "ARM64"
-  }
+  # runtime_platform {
+  #   operating_system_family = "LINUX"
+  #   cpu_architecture        = "ARM64"
+  # }
+}
+
+# CodePipeline等でアプリケーション側のデプロイをすると、Terraform管理のタスク定義のリビジョンとずれるので最新のリビジョンを取得する
+data "aws_ecs_task_definition" "default" {
+  task_definition = aws_ecs_task_definition.default.family
 }
 
 resource "aws_lb_target_group" "default" {
@@ -165,7 +169,7 @@ resource "aws_ecs_service" "default" {
   name                               = local.name
   platform_version                   = "LATEST"
   cluster                            = aws_ecs_cluster.default.name
-  task_definition                    = aws_ecs_task_definition.default.arn
+  task_definition                    = data.aws_ecs_task_definition.default.arn
   launch_type                        = "FARGATE"
   desired_count                      = var.desired_count
   deployment_minimum_healthy_percent = 100
