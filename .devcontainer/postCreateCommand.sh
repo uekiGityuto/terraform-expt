@@ -4,4 +4,9 @@
     echo "alias tf='terraform'"
     echo "alias tffmts='terraform fmt -recursive'"
 } >> ~/.bashrc
-pre-commit install
+
+if [ ! -f .git/hooks/pre-commit ]; then
+    pre-commit install
+fi
+
+tflint --init
