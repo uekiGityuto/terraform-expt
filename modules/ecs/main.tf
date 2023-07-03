@@ -1,7 +1,7 @@
 locals {
   name           = "${var.env}-${var.service}"
-  log_gruop      = "/${var.env}/${var.service}"
-  container_name = "fastapi"
+  log_gruop      = "/${var.env}/${var.service}/app"
+  container_name = "app"
 }
 
 #tfsec:ignore:aws-ecr-repository-customer-key
@@ -60,7 +60,8 @@ resource "aws_ecs_task_definition" "default" {
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = local.container_name
+      name = local.container_name
+      # TODO: tagを指定しなくて良いのかは要検討。
       image = aws_ecr_repository.default.repository_url
       portMappings = [{
         hostPort : 80,
@@ -87,6 +88,7 @@ resource "aws_ecs_task_definition" "default" {
       ]
     }
   ])
+  # 以下のplatformに合わせてDocker Imageを作成する
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "ARM64"
@@ -152,12 +154,16 @@ resource "aws_security_group_rule" "ingress_http" {
 }
 
 resource "aws_ecs_service" "default" {
-  depends_on      = [aws_lb_listener_rule.default]
-  name            = local.name
-  launch_type     = "FARGATE"
-  desired_count   = var.desired_count
-  cluster         = aws_ecs_cluster.default.name
-  task_definition = aws_ecs_task_definition.default.arn
+  depends_on                         = [aws_lb_listener_rule.default]
+  name                               = local.name
+  platform_version                   = "LATEST"
+  cluster                            = aws_ecs_cluster.default.name
+  task_definition                    = aws_ecs_task_definition.default.arn
+  launch_type                        = "FARGATE"
+  desired_count                      = var.desired_count
+  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 200
+  health_check_grace_period_seconds  = 60
 
   network_configuration {
     subnets         = var.subnet_ids
@@ -168,5 +174,10 @@ resource "aws_ecs_service" "default" {
     target_group_arn = aws_lb_target_group.default.arn
     container_name   = local.container_name
     container_port   = "80"
+  }
+
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
   }
 }
