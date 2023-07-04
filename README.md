@@ -70,12 +70,6 @@ CloudFormation で作成する。
 
 ## GitHub リポジトリの設定
 
-### Environments
-
 Environments に stg と prod を作成する。
 
 それぞれの Environment variables に`ROLE_TO_ASSUME`を作成し、[OIDC で AWS 認証するための準備]で作成した IAM Role の ARN を設定する。（e.g. `arn:aws:iam::428485887053:role/terraform-expt-github-actions-exec`）
-
-### Actions permissions
-
-Actions permissions の Workflow permissions で、`Read and Write permissions`を選択する。
