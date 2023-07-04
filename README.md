@@ -19,7 +19,8 @@ Dev Container を使うことを強制はしないが、使わない場合は、
 
 [pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform#terraform_docs)を利用して、commit 時に 自動で lint をかけている。commit ができなかった場合は、pre-commit-terraform による lint エラーを疑うこと。
 
-Git のログには詳細なログは出力されないので、ターミナルから以下のコマンドを実行して、lint エラーの原因を確認すること。
+terraform fmtなどは自動で整形が走るので、修正結果が問題なければ、再度`git add`して`git commit`すること。
+自動修正できないものは、ターミナルから以下のコマンドを実行して、lint エラーの原因を確認し、対応すること。
 
 ```sh
 pre-commit run -a
