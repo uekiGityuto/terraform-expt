@@ -12,6 +12,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pull-requests: write
     strategy:
       matrix:
         env_dir:
@@ -48,7 +49,7 @@ jobs:
 
       - name: Terraform plan
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd ${{ matrix.env_dir }}
           tfcmt -var target:${{ matrix.env_dir }} plan -patch -- terraform plan -no-color
