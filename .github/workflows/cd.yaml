@@ -1,18 +1,28 @@
 name: "Terraform CD"
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      env:
+        required: true
+        description: 環境名
+        default: stg
+        type: choice
+        options:
+          - stg
 
 jobs:
   stg:
-    environment:
-      name: staging
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
+    defaults:
+      run:
+        working-directory: envs/${{ inputs.env }}
+    environment:
+      name: ${{ inputs.env }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -20,25 +30,14 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::428485887053:role/terraform-expt-terraform-from-github-actions
+          role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
           aws-region: ap-northeast-1
 
-      - name: Terraform Plan
-        run: |
-          cd envs/stg
-          terraform init
-          terraform plan -no-color
+      - name: Terraform init
+        run: terraform init
 
-      - name: Terraform Apply
-        run: |
-          cd envs/stg
-          terraform apply -auto-approve -no-color
+      - name: Terraform plan
+        run: terraform plan -no-color
 
-  # マニュアルレビュー必須にして、stg動作確認後にprodにデプロイする
-  prod:
-    environment:
-      name: production
-    runs-on: ubuntu-latest
-    steps:
-      - name: Placeholder for Production Deployment
-        run: echo "Production deployment will be configured here in the future."
+      - name: Terraform apply
+        run: terraform apply -auto-approve -no-color
