@@ -15,14 +15,14 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        env_dir:
-          - "envs/stg"
+        env:
+          - "stg"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Configure AWS credentials - staging
-        if: ${{ matrix.env_dir == 'envs/stg' }}
+        if: ${{ matrix.env == 'stg' }}
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::428485887053:role/terraform-expt-terraform-from-github-actions
@@ -30,12 +30,16 @@ jobs:
 
       - name: Terraform init
         run: |
-          cd ${{ matrix.env_dir }}
+          cd envs/${{ matrix.env }}
           terraform init
+
+      - name: Terraform fmt
+        run: |
+          terraform fmt -diff -check -recursive
 
       - name: Terraform validate
         run: |
-          cd ${{ matrix.env_dir }}
+          cd envs/${{ matrix.env }}
           terraform validate
 
       - name: Setup tfcmt
@@ -51,5 +55,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd ${{ matrix.env_dir }}
-          tfcmt -var target:${{ matrix.env_dir }} plan -patch -- terraform plan -no-color
+          cd envs/${{ matrix.env }}
+          tfcmt -var target:${{ matrix.env }} plan -patch -- terraform plan -no-color
