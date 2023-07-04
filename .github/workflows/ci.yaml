@@ -48,7 +48,7 @@ jobs:
 
       - name: Terraform plan
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           cd ${{ matrix.env_dir }}
           tfcmt -var target:${{ matrix.env_dir }} plan -patch -- terraform plan -no-color
