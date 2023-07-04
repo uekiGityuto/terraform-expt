@@ -32,7 +32,7 @@
         "exiasr.hadolint",
         "timonwong.shellcheck",
         "hashicorp.terraform",
-        "GitHub.copilot-nightly",
+        "GitHub.copilot",
         "GitHub.copilot-labs",
         "GitHub.copilot-chat",
         "GitHub.vscode-github-actions",

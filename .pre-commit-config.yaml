@@ -5,7 +5,11 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
+        # terraform initしていないディレクトリで実施すると無駄なファイルが生成されるので、対象ディレクトリを制限する。
+        # そのため、`^envs/`以外のファイルをコミットしても、terraform_validateは走らないので注意。
         files: ^envs/
       - id: terraform_tflint
+        # `^envs/`以外で実施すると不要な問題を検知するので、対象ディレクトリを制限する。
+        # そのため、`^envs/`以外のファイルをコミットしても、pre-commit hookが走らないので注意。
         files: ^envs/
       - id: terraform_tfsec
