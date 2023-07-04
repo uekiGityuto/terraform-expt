@@ -12,7 +12,7 @@ on:
           - stg
 
 jobs:
-  stg:
+  cd:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -27,17 +27,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials for ${{ inputs.env }}
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
           aws-region: ap-northeast-1
 
-      - name: Terraform init
+      - name: Terraform init for ${{ inputs.env }}
         run: terraform init
 
-      - name: Terraform plan
+      - name: Terraform plan for ${{ inputs.env }}
         run: terraform plan -no-color
 
-      - name: Terraform apply
+      - name: Terraform apply for ${{ inputs.env }}
         run: terraform apply -auto-approve -no-color
