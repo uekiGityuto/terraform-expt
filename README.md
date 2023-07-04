@@ -17,14 +17,22 @@ Dev Container を使うことを強制はしないが、使わない場合は、
 
 ### pre-commit フック
 
-[pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform#terraform_docs)を利用して、commit 時に 自動で lint をかけている。commit ができなかった場合は、pre-commit-terraform による lint エラーを疑うこと。
+[pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform#terraform_docs)を利用して、commit 前に特定の処理を実施している。
 
-terraform fmt などは自動で整形が走るので、修正結果が問題なければ、再度`git add`して`git commit`すること。
-自動修正できないものは、ターミナルから以下のコマンドを実行して、lint エラーの原因を確認し、対応すること。
+pre-commit-terraform で実施する処理は大きく二種類ある。
+
+- 自動で修正/作成する処理
+  - この場合は修正/作成されたファイルがステージングされていない状態になるので、確認して問題なければ、`git add`して`git commit`する。
+- 静的解析（lint）
+  - commit がエラーになるが、Git のログからは lint エラーの原因は確認できない。そのため、ターミナルから以下のコマンドを実行して、原因を確認し、対応する。
 
 ```sh
 pre-commit run -a
 ```
+
+## デプロイ
+
+GitHub Actions の`Terraform CD`を実行する。実行時にデプロイする環境を選択すること。
 
 # 事前準備
 
