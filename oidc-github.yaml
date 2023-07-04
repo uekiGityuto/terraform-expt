@@ -10,7 +10,7 @@ Resources:
   Role:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: terraform-expt-terraform-from-github-actions
+      RoleName: terraform-expt-github-actions-exec
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:

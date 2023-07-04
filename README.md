@@ -19,7 +19,7 @@ Dev Container を使うことを強制はしないが、使わない場合は、
 
 [pre-commit-terraform](https://github.com/antonbabenko/pre-commit-terraform#terraform_docs)を利用して、commit 時に 自動で lint をかけている。commit ができなかった場合は、pre-commit-terraform による lint エラーを疑うこと。
 
-terraform fmtなどは自動で整形が走るので、修正結果が問題なければ、再度`git add`して`git commit`すること。
+terraform fmt などは自動で整形が走るので、修正結果が問題なければ、再度`git add`して`git commit`すること。
 自動修正できないものは、ターミナルから以下のコマンドを実行して、lint エラーの原因を確認し、対応すること。
 
 ```sh
@@ -27,11 +27,6 @@ pre-commit run -a
 ```
 
 # 事前準備
-
-## GitHub リポジトリの設定
-
-Environments に staging と production を作成する。
-production は Deployment protection rules で、Required reviewers にチェックをいれる。
 
 ## AWS の準備
 
@@ -72,3 +67,9 @@ CloudFormation で作成する。
 1. タグを入力する（e.g. `{env: stg, service: terraform-expt}`）
 
 なお、oidc-github.yaml は[こちら](https://zenn.dev/yuta28/articles/terraform-gha#fn-146a-1)を参考にした。
+
+## GitHub リポジトリの設定
+
+Environments に stg と prod を作成する。
+
+それぞれの Environment variables に`ROLE_TO_ASSUME`を作成し、[OIDC で AWS 認証するための準備]で作成した IAM Role の ARN を設定する。（e.g. `arn:aws:iam::428485887053:role/terraform-expt-github-actions-exec`）
