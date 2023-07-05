@@ -13,6 +13,7 @@ on:
 
 jobs:
   cd:
+    name: ${{ inputs.env }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
