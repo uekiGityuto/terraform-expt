@@ -11,7 +11,7 @@ variable "vpc_id" {
 }
 
 variable "public_subnet_ids" {
-  type = list(any)
+  type = list(string)
 }
 
 variable "domain" {

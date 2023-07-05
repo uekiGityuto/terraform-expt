@@ -19,7 +19,7 @@ variable "elb_security_group_id" {
 }
 
 variable "subnet_ids" {
-  type = list(any)
+  type = list(string)
 }
 
 variable "cpu" {
