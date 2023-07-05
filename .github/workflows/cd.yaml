@@ -28,17 +28,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials for ${{ inputs.env }}
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ vars.ROLE_TO_ASSUME }}
           aws-region: ap-northeast-1
 
-      - name: Terraform init for ${{ inputs.env }}
+      - name: Terraform init
         run: terraform init
 
-      - name: Terraform plan for ${{ inputs.env }}
+      - name: Terraform plan
         run: terraform plan -no-color
 
-      - name: Terraform apply for ${{ inputs.env }}
+      - name: Terraform apply
         run: terraform apply -auto-approve -no-color
