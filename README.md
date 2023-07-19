@@ -2,17 +2,18 @@
 
 ## 概要
 
-ECS で Web アプリケーション（FastAPI）を稼働させるためのインフラ
+ECS で Web アプリケーション（FastAPI）を稼働させるためのインフラ。  
+構成図は([こちら](https://drive.google.com/drive/u/0/folders/1K-iZ8PBk1g526BgU5H59h0CLtKB14jzS))
 
 ## アプリケーション
 
-ECS で稼働させるアプリケーションは[fast-api-expt](https://github.com/uekiGityuto/fast-api-expt)
+ECS で稼働させるアプリケーションは[こちら](https://github.com/uekiGityuto/fast-api-expt)
 
 ## 開発
 
 ### VSCode Dev Container
 
-[VSCode Dev Container](https://code.visualstudio.com/docs/remote/containers)を利用している。
+[VSCode Dev Container](https://code.visualstudio.com/docs/remote/containers)を利用している。  
 Dev Container を使うことを強制はしないが、使わない場合は、必要なライブラリを自分でインストールすること。
 
 ### pre-commit フック
