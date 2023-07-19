@@ -88,6 +88,8 @@ resource "aws_route_table_association" "privates" {
 
 # VPC Endpoint
 
+# ECSがECRからイメージを取得するときにS3へのアクセスも行われる（イメージレイヤーはS3に保存されているため）ので必要
+# 参考(https://docs.aws.amazon.com/ja_jp/AmazonECR/latest/userguide/vpc-endpoints.html#ecr-setting-up-s3-gateway)
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.default.id
   service_name      = "com.amazonaws.ap-northeast-1.s3"
