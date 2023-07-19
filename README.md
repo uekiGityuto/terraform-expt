@@ -3,7 +3,7 @@
 ## 概要
 
 ECS で Web アプリケーション（FastAPI）を稼働させるためのインフラ。  
-構成図は([こちら](https://drive.google.com/drive/u/0/folders/1K-iZ8PBk1g526BgU5H59h0CLtKB14jzS))
+構成図は([こちら](https://drive.google.com/file/d/1e48v-ZHxnmmEbQOaunSUl6-sVhOwAvsD/view?usp=sharing))
 
 ## アプリケーション
 
