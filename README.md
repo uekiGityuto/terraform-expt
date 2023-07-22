@@ -95,4 +95,4 @@ Environment variables に`ROLE_TO_ASSUME`を作成し、[OIDC で AWS 認証す�
 ### Environment secrets
 
 Environment secrets に実行時に渡す値を登録する。
-KEY は`TF_VAR_`で始めること。それによって、Terraform が実行時に自動で変数として読み取ってくれる。
+登録する Key は GithubActions の yaml ファイルを確認する。

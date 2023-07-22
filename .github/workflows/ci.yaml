@@ -22,6 +22,9 @@ jobs:
         working-directory: envs/${{ matrix.env }}
     environment:
       name: ${{ matrix.env }}
+    env:
+      TF_VAR_pgpassword: ${{ secrets.PGPASSWORD }}
+      # TF_VAR_secret_key: ${{ secrets.PGPASSWORD }}
 
     steps:
       - name: Checkout
