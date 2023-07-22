@@ -1,3 +1,3 @@
-variable "pgpassword" {
+variable "PGPASSWORD" {
   type = string
 }

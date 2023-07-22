@@ -49,7 +49,7 @@ module "rds" {
   port       = local.pgport
   db_name    = local.pgdatabase
   user_name  = local.pguser
-  password   = var.pgpassword
+  password   = var.PGPASSWORD
 }
 
 module "bastion" {
