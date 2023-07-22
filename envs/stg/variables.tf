@@ -1,0 +1,3 @@
+variable "pgpassword" {
+  type = string
+}

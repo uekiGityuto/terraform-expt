@@ -33,3 +33,39 @@ variable "memory" {
 variable "desired_count" {
   type = number
 }
+
+variable "account_id" {
+  type = string
+}
+
+variable "workers_per_core" {
+  type = string
+}
+
+variable "web_concurrency" {
+  type = string
+}
+
+variable "pghost" {
+  type = string
+}
+
+variable "pgport" {
+  type = string
+}
+
+variable "pgdatabase" {
+  type = string
+}
+
+variable "pguser" {
+  type = string
+}
+
+variable "algorithm" {
+  type = string
+}
+
+variable "access_token_expire_minutes" {
+  type = string
+}

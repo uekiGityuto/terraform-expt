@@ -23,6 +23,8 @@ resource "aws_ecs_cluster" "default" {
   }
 }
 
+# TODO: aws_ecs_cluster_capacity_providersを使って、Fargate Spotを使うとコスト削減できそう
+
 data "aws_iam_policy_document" "assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -33,6 +35,19 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
+data "aws_iam_policy_document" "ssm_policy" {
+  statement {
+    actions = ["ssm:GetParameters"]
+    #tfsec:ignore:aws-iam-no-policy-wildcards
+    resources = ["arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/*"]
+  }
+}
+
+resource "aws_iam_policy" "ssm_policy" {
+  name   = "${local.name}-ssm-policy"
+  policy = data.aws_iam_policy_document.ssm_policy.json
+}
+
 resource "aws_iam_role" "task_execution_role" {
   name               = "${local.name}-ecs-task-execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
@@ -41,6 +56,11 @@ resource "aws_iam_role" "task_execution_role" {
 resource "aws_iam_role_policy_attachment" "task_execution_role_policy" {
   role       = aws_iam_role.task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_policy" {
+  role       = aws_iam_role.task_execution_role.name
+  policy_arn = aws_iam_policy.ssm_policy.arn
 }
 
 #tfsec:ignore:aws-cloudwatch-log-group-customer-key
@@ -58,7 +78,8 @@ resource "aws_ecs_task_definition" "default" {
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name  = local.container_name
+      name = local.container_name
+      # TODO: tag指定する必要あり
       image = aws_ecr_repository.default.repository_url
       portMappings = [{
         hostPort : 80,
@@ -72,16 +93,49 @@ resource "aws_ecs_task_definition" "default" {
           awslogs-stream-prefix : "ecs"
         }
       }
-      # TODO: 環境変数の渡し方は要検討（最低でも変数化する）
       environment = [
         {
           name : "WORKERS_PER_CORE",
-          value : "3"
+          value : var.workers_per_core
         },
         {
           name : "WEB_CONCURRENCY",
-          value : "2"
-        }
+          value : var.web_concurrency
+        },
+        {
+          name : "PGHOST",
+          value : var.pghost
+        },
+        {
+          name : "PGPORT",
+          value : var.pgport
+        },
+        {
+          name : "PGDATABASE",
+          value : var.pgdatabase
+        },
+        {
+          name : "PGUSER",
+          value : var.pguser
+        },
+        {
+          name : "ALGORITHM",
+          value : var.algorithm
+        },
+        {
+          name : "ACCESS_TOKEN_EXPIRE_MINUTES",
+          value : var.access_token_expire_minutes
+        },
+      ],
+      secrets = [
+        {
+          name : "PGPASSWORD",
+          valueFrom : "arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/pgpassword"
+        },
+        {
+          name : "SECRET_KEY",
+          valueFrom : "arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/secret_key"
+        },
       ]
     }
   ])
@@ -105,7 +159,7 @@ resource "aws_lb_target_group" "default" {
   protocol    = "HTTP"
 
   health_check {
-    path                = "/"
+    path                = "/health"
     protocol            = "HTTP"
     port                = 80
     healthy_threshold   = 3

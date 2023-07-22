@@ -31,6 +31,13 @@ pre-commit-terraform で実施する処理は大きく二種類ある。
 pre-commit run -a
 ```
 
+### 機密情報
+
+機密情報は実行時に値を渡している。
+GitHub Actions で実行するときは Secrets に登録するが、ローカルで実行するときは、`*.auto.tfvars`を作成しておけば、自動で実行時に値を渡してくれる。
+
+例えば、各環境のディレクトリに`credential.auto.tfvars`を作成し、`variables.tf`で定義している変数の値を登録する。
+
 ## デプロイ
 
 GitHub Actions の`Terraform CD`を実行する。実行時にデプロイする環境を選択すること。
@@ -81,4 +88,11 @@ CloudFormation で作成する。
 
 Environments に stg と prod を作成する。
 
-それぞれの Environment variables に`ROLE_TO_ASSUME`を作成し、[OIDC で AWS 認証するための準備]で作成した IAM Role の ARN を設定する。（e.g. `arn:aws:iam::428485887053:role/terraform-expt-github-actions-exec`）
+### Environment variables
+
+Environment variables に`ROLE_TO_ASSUME`を作成し、[OIDC で AWS 認証するための準備]で作成した IAM Role の ARN を設定する。（e.g. `arn:aws:iam::428485887053:role/terraform-expt-github-actions-exec`）
+
+### Environment secrets
+
+Environment secrets に実行時に渡す値を登録する。
+KEY は`TF_VAR_`で始めること。それによって、Terraform が実行時に自動で変数として読み取ってくれる。
