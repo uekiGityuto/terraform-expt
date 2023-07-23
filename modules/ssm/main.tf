@@ -3,7 +3,7 @@ locals {
   base_app = "/${var.env}/${var.service}/app"
 }
 
-# TODO: デフォルトのKMSではなく、CMKを使って暗号化する
+# アクセスできるユーザを制限したい場合は、デフォルトのKMS（AWSマネージドキー）ではなく、カスタマー管理キー（CMK）を使って暗号化する（現状はアカウント内の全ユーザがアクセス可能）
 # https://docs.aws.amazon.com/ja_jp/systems-manager/latest/userguide/sysman-paramstore-access.html#ps-kms-permissions
 
 resource "aws_ssm_parameter" "db_password" {
