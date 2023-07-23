@@ -62,6 +62,14 @@ variable "pguser" {
   type = string
 }
 
+variable "pgpassword_arn" {
+  type = string
+}
+
+variable "secret_key_arn" {
+  type = string
+}
+
 variable "algorithm" {
   type = string
 }

@@ -39,6 +39,14 @@ module "elb" {
   acm_id            = module.acm.acm_id
 }
 
+module "ssm" {
+  source         = "../../modules/ssm"
+  env            = local.env
+  service        = local.service
+  db_password    = var.pgpassword
+  app_secret_key = var.secret_key
+}
+
 module "rds" {
   source     = "../../modules/rds"
   env        = local.env
@@ -79,6 +87,8 @@ module "ecs" {
   pgport                      = local.pgport
   pgdatabase                  = local.pgdatabase
   pguser                      = local.pguser
+  pgpassword_arn              = module.ssm.db_password_arn
+  secret_key_arn              = module.ssm.app_secret_key_arn
   algorithm                   = local.algorithm
   access_token_expire_minutes = local.access_token_expire_minutes
 }

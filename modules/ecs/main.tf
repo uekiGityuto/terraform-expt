@@ -38,8 +38,9 @@ data "aws_iam_policy_document" "assume_role" {
 data "aws_iam_policy_document" "ssm_policy" {
   statement {
     actions = ["ssm:GetParameters"]
-    #tfsec:ignore:aws-iam-no-policy-wildcards
-    resources = ["arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/*"]
+    # ワイルドカード(*)を使った方が保守性が高い可能性あり
+    # e.g. "arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/app/*"
+    resources = [var.pgpassword_arn, var.secret_key_arn]
   }
 }
 
@@ -130,11 +131,11 @@ resource "aws_ecs_task_definition" "default" {
       secrets = [
         {
           name : "PGPASSWORD",
-          valueFrom : "arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/pgpassword"
+          valueFrom : var.pgpassword_arn
         },
         {
           name : "SECRET_KEY",
-          valueFrom : "arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/secret_key"
+          valueFrom : var.secret_key_arn
         },
       ]
     }
