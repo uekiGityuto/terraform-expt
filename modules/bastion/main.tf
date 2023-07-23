@@ -23,8 +23,6 @@ resource "aws_security_group_rule" "egress" {
   cidr_blocks = ["0.0.0.0/0"]
 }
 
-# TODO: ブロックデバイスを暗号化する
-#tfsec:ignore:aws-ec2-enable-at-rest-encryption
 resource "aws_instance" "default" {
   ami                         = "ami-0689ba4565ed58788"
   instance_type               = "t4g.micro"
@@ -34,6 +32,10 @@ resource "aws_instance" "default" {
   associate_public_ip_address = true
 
   user_data = file("${path.module}/user_data.sh")
+
+  root_block_device {
+    encrypted = true
+  }
 
   metadata_options {
     http_tokens = "required"

@@ -145,8 +145,13 @@ Terraform で管理しているタスク定義と実際のタスク定義が異�
 
 ### やりたい気持ちもあったけどやらなかったこと
 
-- Fargate Spot を使ってコスト削減する
-- ping を許可する
-- ALB のアクセスログをとる
-- ECS の AutoScale を設定する
-- Seekable OCI インデックスを使って、コンテナ起動を早くする（(参考)[https://dev.classmethod.jp/articles/update-aws-fargate-seekable-oci/]）
+- ECS
+  - Fargate Spot を使ってコスト削減する
+  - AutoScale を設定する
+  - Seekable OCI インデックスを使って、コンテナ起動を早くする（(参考)[https://dev.classmethod.jp/articles/update-aws-fargate-seekable-oci/]）
+- Network
+  - ping を許可する
+- ELB
+  - アクセスログをとる
+- RDS
+  - 拡張モニタリングを有効化する

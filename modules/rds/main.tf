@@ -87,6 +87,7 @@ resource "aws_rds_cluster" "default" {
   engine                          = "aurora-postgresql"
   engine_version                  = "15.3"
   port                            = var.port
+  copy_tags_to_snapshot           = true
 
   database_name   = var.db_name
   master_username = var.user_name
