@@ -23,8 +23,6 @@ resource "aws_ecs_cluster" "default" {
   }
 }
 
-# TODO: aws_ecs_cluster_capacity_providersを使って、Fargate Spotを使うとコスト削減できそう
-
 data "aws_iam_policy_document" "assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -39,7 +37,7 @@ data "aws_iam_policy_document" "ssm_policy" {
   statement {
     actions = ["ssm:GetParameters"]
     # ワイルドカード(*)を使った方が保守性が高い可能性あり
-    # e.g. "arn:aws:ssm:ap-northeast-1:${var.account_id}:parameter/${var.env}/${var.service}/app/*"
+    # e.g. "arn:aws:ssm:ap-northeast-1:${var.data.aws_caller_identity.current.account_id}:parameter/${var.env}/${var.service}/app/*"
     resources = [var.pgpassword_arn, var.secret_key_arn]
   }
 }

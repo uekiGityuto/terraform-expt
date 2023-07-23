@@ -1,9 +1,8 @@
 locals {
-  env        = "stg"
-  service    = "terraform-expt"
-  domain     = "waito-expt.com"
-  account_id = "428485887053"
-  vpc_cidr   = "10.0.0.0/16"
+  env      = "stg"
+  service  = "terraform-expt"
+  domain   = "waito-expt.com"
+  vpc_cidr = "10.0.0.0/16"
   # 環境変数
   workers_per_core            = "3"
   web_concurrency             = "2"
@@ -48,16 +47,17 @@ module "ssm" {
 }
 
 module "rds" {
-  source     = "../../modules/rds"
-  env        = local.env
-  service    = local.service
-  vpc_id     = module.network.vpc_id
-  subnet_ids = module.network.private_subnet_ids
-  vpc_cidr   = local.vpc_cidr
-  port       = local.pgport
-  db_name    = local.pgdatabase
-  user_name  = local.pguser
-  password   = var.pgpassword
+  source         = "../../modules/rds"
+  env            = local.env
+  service        = local.service
+  vpc_id         = module.network.vpc_id
+  subnet_ids     = module.network.private_subnet_ids
+  vpc_cidr       = local.vpc_cidr
+  port           = local.pgport
+  db_name        = local.pgdatabase
+  user_name      = local.pguser
+  password       = var.pgpassword
+  instance_count = 1
 }
 
 module "bastion" {
@@ -79,7 +79,6 @@ module "ecs" {
   cpu                   = "256"
   memory                = "512"
   desired_count         = 2
-  account_id            = local.account_id
   # 環境変数
   workers_per_core            = local.workers_per_core
   web_concurrency             = local.web_concurrency

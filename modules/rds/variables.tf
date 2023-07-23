@@ -34,3 +34,7 @@ variable "user_name" {
 variable "password" {
   type = string
 }
+
+variable "instance_count" {
+  type = number
+}

@@ -34,10 +34,6 @@ variable "desired_count" {
   type = number
 }
 
-variable "account_id" {
-  type = string
-}
-
 variable "workers_per_core" {
   type = string
 }
