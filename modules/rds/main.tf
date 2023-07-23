@@ -64,6 +64,11 @@ resource "aws_kms_key" "default" {
   })
 }
 
+resource "aws_kms_alias" "default" {
+  name          = "alias/${var.env}/${var.service}/rds"
+  target_key_id = aws_kms_key.default.key_id
+}
+
 resource "aws_rds_cluster_parameter_group" "default" {
   name        = "${local.name}-cluster-parameter-group"
   family      = "aurora-postgresql15"
