@@ -80,7 +80,7 @@ resource "aws_rds_cluster_parameter_group" "default" {
 }
 
 resource "aws_rds_cluster" "default" {
-  cluster_identifier              = "${local.name}-cluster"
+  cluster_identifier              = local.name
   db_subnet_group_name            = aws_db_subnet_group.default.name
   vpc_security_group_ids          = [aws_security_group.default.id]
   backup_retention_period         = 7
